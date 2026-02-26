@@ -5,24 +5,25 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { SignInFormType, signInSchema } from "@/lib/zodSchema"
+import { RegistrationFormType, registrationSchema, SignInFormType, signInSchema } from "@/lib/zodSchema"
 
 
 
 
-const LoginPage = () => {
+const RegisterPage = () => {
 
 
-    const form = useForm<SignInFormType>({
-        resolver: zodResolver(signInSchema),
+    const form = useForm<RegistrationFormType>({
+        resolver: zodResolver(registrationSchema),
         defaultValues: {
+            name:"",
             email: "",
             password: ""
         },
     })
 
 
-    function onSubmit(data: SignInFormType) {
+    function onSubmit(data: RegistrationFormType) {
         console.log(data)
     }
     return (
@@ -30,12 +31,23 @@ const LoginPage = () => {
 
             {/* Header */}
             <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold  mb-2">تسجبل الدخول</h1>
-                <p className="text-muted-foreground text-sm">ادخل تفاصيلك لتسجيل الدخول</p>
+                <h1 className="text-3xl font-bold  mb-2">تسجيل حساب جديد</h1>
+                <p className="text-muted-foreground text-sm">ادخل تفاصيلك لتسجيل حساب جديد</p>
             </div>
 
             {/* Form */}
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field>
+                            <FieldLabel>الاسم</FieldLabel>
+                            <Input className="rounded-sm" type="text" {...field} />
+                            {fieldState.invalid && <FieldError className="text-red-500" errors={[fieldState.error]} />}
+                        </Field>
+                    )}
+                />
                 <Controller
                     name="email"
                     control={form.control}
@@ -55,7 +67,6 @@ const LoginPage = () => {
                         <Field>
                             <FieldLabel>كلمة المرور</FieldLabel>
                             <Input className="rounded-sm" type="password" {...field} />
-                            <Link href={"/auth/forgot-password"} className=" text-end text-gray-400 hover:text-white hover:underline transition-all mr-auto"> هل نسيت كلمة المرور ؟</Link>
                             {fieldState.invalid && <FieldError className="text-red-500" errors={[fieldState.error]} />}
                         </Field>
                     )}
@@ -66,11 +77,11 @@ const LoginPage = () => {
                 </Button>
 
                 <Link href={"/auth/register"} className="text-sm text-gray-400 hover:text-white hover:underline transition-all text-center block">
-                    ليس لديك حساب ؟ تسجبل جديد
+                    هل لديك حساب ؟ تسجيل الدخول
                 </Link>
             </form>
         </>
     )
 }
 
-export default LoginPage
+export default RegisterPage

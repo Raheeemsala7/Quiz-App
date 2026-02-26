@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Almarai} from "next/font/google";
+import { Almarai } from "next/font/google";
 import "./globals.css";
 import { DirectionProvider } from "@/components/ui/direction";
 import { ThemeProvider } from "@/components/theme-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const almarai = Almarai({
   variable: "--font-almarai",
@@ -20,20 +21,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const queryClient = new QueryClient()
+
   return (
     <html lang="en">
       <body
         className={`${almarai.variable} ${almarai.variable} antialiased`}
         dir="rtl"
       >
-        <ThemeProvider
+        <QueryClientProvider client={queryClient}>
+
+
+          <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-        <DirectionProvider dir="rtl">{children}</DirectionProvider>
+            <DirectionProvider dir="rtl">{children}</DirectionProvider>
           </ThemeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
